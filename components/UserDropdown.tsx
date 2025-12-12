@@ -11,14 +11,19 @@ import { Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"
 import {useRouter} from "next/navigation";
 import {Button} from "@/components/ui/button";
 import {LogOut} from "lucide-react";
-import NavItems from "@/components/Navitems";
+import NavItems from "@/components/NavItems";
 
-const UserDropdown = () => {
+const UserDropdown = ({
+    user,
+    initialStocks,
+}: {
+    user: User;
+    initialStocks: StockWithWatchlistStatus[];
+}) => {
     const router = useRouter();
     const handlesignOut = async () => {
         router.push("/sign-in");
     }
-    const user = { name: 'john', email: 'contact@jsmastery.com'};
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -62,7 +67,7 @@ const UserDropdown = () => {
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className={" hidden sm:block  bg-gray-600"} />
                 <nav className={"sm:hidden"}>
-                    <NavItems />
+                    <NavItems initialStocks={initialStocks} />
                 </nav>
 
             </DropdownMenuContent>

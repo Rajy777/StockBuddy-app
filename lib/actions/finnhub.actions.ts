@@ -4,6 +4,16 @@ import { getDateRange, validateArticle, formatArticle } from '@/lib/utils';
 import { POPULAR_STOCK_SYMBOLS } from '@/lib/constants';
 import { cache } from 'react';
 
+type FinnhubProfile2Response = {
+    name?: string;
+    ticker?: string;
+    exchange?: string;
+};
+
+type FinnhubSearchResultWithExchange = FinnhubSearchResult & {
+    __exchange?: string;
+};
+
 const FINNHUB_BASE_URL = 'https://finnhub.io/api/v1';
 const NEXT_PUBLIC_FINNHUB_API_KEY = process.env.NEXT_PUBLIC_FINNHUB_API_KEY ?? '';
 
@@ -109,7 +119,7 @@ export const searchStocks = cache(async (query?: string): Promise<StockWithWatch
 
         const trimmed = typeof query === 'string' ? query.trim() : '';
 
-        let results: FinnhubSearchResult[] = [];
+        let results: FinnhubSearchResultWithExchange[] = [];
 
         if (!trimmed) {
             // Fetch top 10 popular symbols' profiles
@@ -119,11 +129,11 @@ export const searchStocks = cache(async (query?: string): Promise<StockWithWatch
                     try {
                         const url = `${FINNHUB_BASE_URL}/stock/profile2?symbol=${encodeURIComponent(sym)}&token=${token}`;
                         // Revalidate every hour
-                        const profile = await fetchJSON<any>(url, 3600);
-                        return { sym, profile } as { sym: string; profile: any };
+                        const profile = await fetchJSON<FinnhubProfile2Response>(url, 3600);
+                        return { sym, profile };
                     } catch (e) {
                         console.error('Error fetching profile2 for', sym, e);
-                        return { sym, profile: null } as { sym: string; profile: any };
+                        return { sym, profile: null } as { sym: string; profile: FinnhubProfile2Response | null };
                     }
                 })
             );
@@ -134,23 +144,20 @@ export const searchStocks = cache(async (query?: string): Promise<StockWithWatch
                     const name: string | undefined = profile?.name || profile?.ticker || undefined;
                     const exchange: string | undefined = profile?.exchange || undefined;
                     if (!name) return undefined;
-                    const r: FinnhubSearchResult = {
+                    const r: FinnhubSearchResultWithExchange = {
                         symbol,
                         description: name,
                         displaySymbol: symbol,
                         type: 'Common Stock',
+                        __exchange: exchange,
                     };
-                    // We don't include exchange in FinnhubSearchResult type, so carry via mapping later using profile
-                    // To keep pipeline simple, attach exchange via closure map stage
-                    // We'll reconstruct exchange when mapping to final type
-                    (r as any).__exchange = exchange; // internal only
                     return r;
                 })
                 .filter((x): x is FinnhubSearchResult => Boolean(x));
         } else {
             const url = `${FINNHUB_BASE_URL}/search?q=${encodeURIComponent(trimmed)}&token=${token}`;
             const data = await fetchJSON<FinnhubSearchResponse>(url, 1800);
-            results = Array.isArray(data?.result) ? data.result : [];
+            results = (Array.isArray(data?.result) ? data.result : []) as FinnhubSearchResultWithExchange[];
         }
 
         const mapped: StockWithWatchlistStatus[] = results
@@ -158,7 +165,7 @@ export const searchStocks = cache(async (query?: string): Promise<StockWithWatch
                 const upper = (r.symbol || '').toUpperCase();
                 const name = r.description || upper;
                 const exchangeFromDisplay = (r.displaySymbol as string | undefined) || undefined;
-                const exchangeFromProfile = (r as any).__exchange as string | undefined;
+                const exchangeFromProfile = r.__exchange;
                 const exchange = exchangeFromDisplay || exchangeFromProfile || 'US';
                 const type = r.type || 'Stock';
                 const item: StockWithWatchlistStatus = {
