@@ -9,7 +9,7 @@ export const getAllUsersForNewsEmail = async () => {
         );
         const users = usersResult.rows;
 
-        return users.filter((user) => user.email && user.name).map((user) => ({
+        return (users as UserForNewsEmail[]).filter((user) => user.email && user.name).map((user) => ({
             id: user.id || '',
             email: user.email,
             name: user.name
