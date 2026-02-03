@@ -28,8 +28,8 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
         return () => window.removeEventListener("keydown", onKeyDown)
     }, [])
 
-    const handleSearch = async () => {
-        if (!isSearchMode) return setStocks(initialStocks);
+    const handleSearch = async (forceFetchPopular = false) => {
+        if (!isSearchMode && !forceFetchPopular) return setStocks(initialStocks);
 
         setLoading(true)
         try {
@@ -47,9 +47,9 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
     useEffect(() => {
         // If initial stocks were empty (e.g. server failure), try to fetch once on mount
         if (!initialStocks || initialStocks.length === 0) {
-            handleSearch();
+            handleSearch(true);
         }
-    }, []);
+    }, [initialStocks]);
 
     useEffect(() => {
         debouncedSearch();
