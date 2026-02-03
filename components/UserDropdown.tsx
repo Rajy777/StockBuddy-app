@@ -63,10 +63,17 @@ const UserDropdown = ({
                     </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className={" bg-gray-600"} />
-                <DropdownMenuItem onClick={handlesignOut} className={"text-gray-100 text-md font-medium focus:bg-transparent focus:text-yellow-500  transition-colors cursor-pointer"}>
-                    <LogOut className={"h-4 w-4 mr-2 hidden sm:block"} />
-                    logout
-                </DropdownMenuItem>
+                {user.id === 'guest' ? (
+                    <DropdownMenuItem onClick={() => router.push("/sign-in")} className={"text-yellow-500 text-md font-bold focus:bg-yellow-500/10 focus:text-yellow-500 transition-colors cursor-pointer"}>
+                        <LogOut className={"h-4 w-4 mr-2 hidden sm:block rotate-180"} />
+                        sign in
+                    </DropdownMenuItem>
+                ) : (
+                    <DropdownMenuItem onClick={handlesignOut} className={"text-gray-100 text-md font-medium focus:bg-transparent focus:text-yellow-500  transition-colors cursor-pointer"}>
+                        <LogOut className={"h-4 w-4 mr-2 hidden sm:block"} />
+                        logout
+                    </DropdownMenuItem>
+                )}
                 <DropdownMenuSeparator className={" hidden sm:block  bg-gray-600"} />
                 <nav className={"sm:hidden"}>
                     <NavItems initialStocks={initialStocks} />

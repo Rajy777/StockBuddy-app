@@ -5,7 +5,8 @@ export async function middleware(request: NextRequest) {
     const sessionCookie = getSessionCookie(request);
 
     if (!sessionCookie) {
-        return NextResponse.redirect(new URL("/", request.url));
+        // Allow request to proceed even without session cookie to support Guest Mode
+        return NextResponse.next();
     }
 
     return NextResponse.next();

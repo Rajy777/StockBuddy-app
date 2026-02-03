@@ -32,6 +32,16 @@ const WatchlistButton = ({
     }, [added, type]);
 
     const handleClick = async () => {
+        if (email === 'guest@stockbuddy.com') {
+            toast.info("Please sign in to manage your watchlist", {
+                action: {
+                    label: "Sign In",
+                    onClick: () => window.location.href = "/sign-in"
+                }
+            });
+            return;
+        }
+
         const next = !added;
         setAdded(next);
 
