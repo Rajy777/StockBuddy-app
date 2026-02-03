@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react"
 import { CommandDialog, CommandEmpty, CommandInput, CommandList } from "@/components/ui/command"
-import {Button} from "@/components/ui/button";
-import {Loader2,  TrendingUp} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Loader2, TrendingUp } from "lucide-react";
 import Link from "next/link";
-import {searchStocks} from "@/lib/actions/finnhub.actions";
-import {useDebounce} from "@/hooks/useDebounce";
+import { searchStocks } from "@/lib/actions/finnhub.actions";
+import { useDebounce } from "@/hooks/useDebounce";
 
 export default function SearchCommand({ renderAs = 'button', label = 'Add stock', initialStocks }: SearchCommandProps) {
     const [open, setOpen] = useState(false)
@@ -29,7 +29,7 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
     }, [])
 
     const handleSearch = async () => {
-        if(!isSearchMode) return setStocks(initialStocks);
+        if (!isSearchMode) return setStocks(initialStocks);
 
         setLoading(true)
         try {
@@ -45,22 +45,32 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
     const debouncedSearch = useDebounce(handleSearch, 300);
 
     useEffect(() => {
+        // If initial stocks were empty (e.g. server failure), try to fetch once on mount
+        if (!initialStocks || initialStocks.length === 0) {
+            handleSearch();
+        }
+    }, []);
+
+    useEffect(() => {
         debouncedSearch();
     }, [searchTerm]);
 
     const handleSelectStock = () => {
         setOpen(false);
         setSearchTerm("");
-        setStocks(initialStocks);
+        setStocks(initialStocks || []);
     }
 
     return (
         <>
             {renderAs === 'text' ? (
-                <span onClick={() => setOpen(true)} className="search-text">
-            {label}
-          </span>
-            ): (
+                <span
+                    onClick={() => setOpen(true)}
+                    className="search-text hover:text-yellow-500 cursor-pointer transition-colors"
+                >
+                    {label}
+                </span>
+            ) : (
                 <Button onClick={() => setOpen(true)} className="search-btn">
                     {label}
                 </Button>
@@ -91,12 +101,12 @@ export default function SearchCommand({ renderAs = 'button', label = 'Add stock'
                                         className="search-item-link"
                                     >
                                         <TrendingUp className="h-4 w-4 text-gray-500" />
-                                        <div  className="flex-1">
+                                        <div className="flex-1">
                                             <div className="search-item-name">
                                                 {stock.name}
                                             </div>
                                             <div className="text-sm text-gray-500">
-                                                {stock.symbol} | {stock.exchange } | {stock.type}
+                                                {stock.symbol} | {stock.exchange} | {stock.type}
                                             </div>
                                         </div>
                                         {/*<Star />*/}
