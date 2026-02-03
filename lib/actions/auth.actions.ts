@@ -14,6 +14,13 @@ export const signUpWithEmail = async ({ email, password, fullName, country, inve
             }
         })
 
+        if (response) {
+            await inngest.send({
+                name: 'app/user.created',
+                data: { email, name: fullName, country, investmentGoals, riskTolerance, preferredIndustry }
+            })
+        }
+
         return {
             success: true,
             user: response?.user ? {
