@@ -18,13 +18,19 @@ export default async function StockDetails({ params }: StockDetailsPageProps) {
     const tvSymbol = formatTradingViewSymbol(symbol);
     const scriptUrl = `https://s3.tradingview.com/external-embedding/embed-widget-`;
 
-    const session = await auth.api.getSession({ headers: await headers() });
-    const userEmail = session?.user?.email || "";
-
+    let userEmail = "";
     let isInWatchlist = false;
-    if (userEmail) {
-        const watchlist = await getWatchlistSymbolsByEmail(userEmail);
-        isInWatchlist = watchlist.includes(symbol.toUpperCase());
+
+    try {
+        const session = await auth.api.getSession({ headers: await headers() });
+        userEmail = session?.user?.email || "";
+
+        if (userEmail) {
+            const watchlist = await getWatchlistSymbolsByEmail(userEmail);
+            isInWatchlist = watchlist.includes(symbol.toUpperCase());
+        }
+    } catch (e) {
+        console.error('Failed to fetch session or watchlist in StockDetails:', e);
     }
 
     return (

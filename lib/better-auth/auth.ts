@@ -24,5 +24,10 @@ export const getAuth = () => {
     return authInstance;
 };
 
-// Use a getter to avoid top-level initialization issues during build
-export const auth = getAuth();
+// Use a lazy proxy to avoid top-level initialization issues during build or when DB is missing
+export const auth = new Proxy({} as ReturnType<typeof betterAuth>, {
+    get(_, prop) {
+        const instance = getAuth();
+        return (instance as any)[prop];
+    }
+});
