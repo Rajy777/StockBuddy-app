@@ -14,14 +14,14 @@ export const signUpWithEmail = async ({ email, password, fullName, country, inve
             }
         })
 
-        if (response) {
-            await inngest.send({
-                name: 'app/user.created',
-                data: { email, name: fullName, country, investmentGoals, riskTolerance, preferredIndustry }
-            })
+        return {
+            success: true,
+            user: response?.user ? {
+                id: response.user.id,
+                email: response.user.email,
+                name: response.user.name
+            } : null
         }
-
-        return { success: true, data: response }
     } catch (e: any) {
         console.log('Sign up failed', e)
         return { success: false, error: e?.message || 'Sign up failed' }
@@ -32,7 +32,14 @@ export const signInWithEmail = async ({ email, password }: SignInFormData) => {
     try {
         const response = await auth.api.signInEmail({ body: { email, password } })
 
-        return { success: true, data: response }
+        return {
+            success: true,
+            user: response?.user ? {
+                id: response.user.id,
+                email: response.user.email,
+                name: response.user.name
+            } : null
+        }
     } catch (e: any) {
         console.log('Sign in failed', e)
         return { success: false, error: e?.message || 'Sign in failed' }
