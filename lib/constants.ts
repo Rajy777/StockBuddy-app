@@ -177,58 +177,37 @@ export const SYMBOL_INFO_WIDGET_CONFIG = (symbol: string) => ({
     locale: 'en',
     width: '100%',
     height: 170,
+    container_id: `tradingview_symbol_info_${symbol.replace(/[^a-zA-Z0-9]/g, '_')}`
 });
 
 export const CANDLE_CHART_WIDGET_CONFIG = (symbol: string) => ({
-    allow_symbol_change: false,
-    calendar: false,
-    details: true,
-    hide_side_toolbar: true,
-    hide_top_toolbar: false,
-    hide_legend: false,
-    hide_volume: false,
-    hotlist: false,
-    interval: 'D',
-    locale: 'en',
-    save_image: false,
-    style: 1,
-    symbol: symbol.toUpperCase(),
-    theme: 'dark',
-    timezone: 'Etc/UTC',
-    backgroundColor: '#141414',
-    gridColor: '#141414',
-    watchlist: [],
-    withdateranges: false,
-    compareSymbols: [],
-    studies: [],
-    width: '100%',
+    width: "100%",
     height: 600,
+    symbol: symbol.toUpperCase(),
+    interval: 'D',
+    timezone: 'Etc/UTC',
+    theme: 'dark',
+    style: '1',
+    locale: 'en',
+    allow_symbol_change: true,
+    calendar: false,
+    support_host: "https://www.tradingview.com",
+    container_id: `tv_candle_${symbol.replace(/[^a-zA-Z0-9]/g, '_')}`
 });
 
 export const BASELINE_WIDGET_CONFIG = (symbol: string) => ({
-    allow_symbol_change: false,
-    calendar: false,
-    details: false,
-    hide_side_toolbar: true,
-    hide_top_toolbar: false,
-    hide_legend: false,
-    hide_volume: false,
-    hotlist: false,
-    interval: 'D',
-    locale: 'en',
-    save_image: false,
-    style: 10,
-    symbol: symbol.toUpperCase(),
-    theme: 'dark',
-    timezone: 'Etc/UTC',
-    backgroundColor: '#141414',
-    gridColor: '#141414',
-    watchlist: [],
-    withdateranges: false,
-    compareSymbols: [],
-    studies: [],
-    width: '100%',
+    width: "100%",
     height: 600,
+    symbol: symbol.toUpperCase(),
+    interval: 'D',
+    timezone: 'Etc/UTC',
+    theme: 'dark',
+    style: '10',
+    locale: 'en',
+    allow_symbol_change: true,
+    calendar: false,
+    support_host: "https://www.tradingview.com",
+    container_id: `tv_baseline_${symbol.replace(/[^a-zA-Z0-9]/g, '_')}`
 });
 
 export const TECHNICAL_ANALYSIS_WIDGET_CONFIG = (symbol: string) => ({
@@ -240,6 +219,7 @@ export const TECHNICAL_ANALYSIS_WIDGET_CONFIG = (symbol: string) => ({
     height: 400,
     interval: '1h',
     largeChartUrl: '',
+    container_id: `tradingview_technical_analysis_${symbol.replace(/[^a-zA-Z0-9]/g, '_')}`
 });
 
 export const COMPANY_PROFILE_WIDGET_CONFIG = (symbol: string) => ({
@@ -249,6 +229,7 @@ export const COMPANY_PROFILE_WIDGET_CONFIG = (symbol: string) => ({
     locale: 'en',
     width: '100%',
     height: 440,
+    container_id: `tradingview_company_profile_${symbol.replace(/[^a-zA-Z0-9]/g, '_')}`
 });
 
 export const COMPANY_FINANCIALS_WIDGET_CONFIG = (symbol: string) => ({
@@ -260,6 +241,7 @@ export const COMPANY_FINANCIALS_WIDGET_CONFIG = (symbol: string) => ({
     height: 464,
     displayMode: 'regular',
     largeChartUrl: '',
+    container_id: `tradingview_company_financials_${symbol.replace(/[^a-zA-Z0-9]/g, '_')}`
 });
 
 export const POPULAR_STOCK_SYMBOLS = [

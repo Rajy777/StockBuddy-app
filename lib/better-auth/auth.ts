@@ -11,7 +11,7 @@ export const getAuth = () => {
     const secret = process.env.BETTER_AUTH_SECRET || 'fallback-secret-for-build';
 
     authInstance = betterAuth({
-        database: db || { type: 'postgres' } as any,
+        database: db || ({ type: 'postgres' } as any),
         secret: secret,
         baseURL: process.env.BETTER_AUTH_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000'),
         emailAndPassword: {

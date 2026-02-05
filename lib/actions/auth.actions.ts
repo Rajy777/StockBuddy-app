@@ -29,9 +29,10 @@ export const signUpWithEmail = async ({ email, password, fullName, country, inve
                 name: response.user.name
             } : null
         }
-    } catch (e: any) {
-        console.log('Sign up failed', e)
-        return { success: false, error: e?.message || 'Sign up failed' }
+    } catch (e) {
+        const error = e as Error;
+        console.log('Sign up failed', error)
+        return { success: false, error: error?.message || 'Sign up failed' }
     }
 }
 
@@ -47,9 +48,10 @@ export const signInWithEmail = async ({ email, password }: SignInFormData) => {
                 name: response.user.name
             } : null
         }
-    } catch (e: any) {
-        console.log('Sign in failed', e)
-        return { success: false, error: e?.message || 'Sign in failed' }
+    } catch (e) {
+        const error = e as Error;
+        console.log('Sign in failed', error)
+        return { success: false, error: error?.message || 'Sign in failed' }
     }
 }
 

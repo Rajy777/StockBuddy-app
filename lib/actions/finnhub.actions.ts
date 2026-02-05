@@ -122,8 +122,8 @@ export const searchStocks = cache(async (query?: string): Promise<StockWithWatch
         let results: FinnhubSearchResultWithExchange[] = [];
 
         if (!trimmed) {
-            // Fetch top 10 popular symbols' profiles
-            const top = POPULAR_STOCK_SYMBOLS.slice(0, 10);
+            // Fetch all popular symbols' profiles
+            const top = POPULAR_STOCK_SYMBOLS;
             const profiles = await Promise.all(
                 top.map(async (sym) => {
                     try {
@@ -162,22 +162,20 @@ export const searchStocks = cache(async (query?: string): Promise<StockWithWatch
 
         const mapped: StockWithWatchlistStatus[] = results
             .map((r) => {
-                const upper = (r.symbol || '').toUpperCase();
-                const name = r.description || upper;
-                const exchangeFromDisplay = (r.displaySymbol as string | undefined) || undefined;
+                const displaySym = (r.displaySymbol || r.symbol || '').toUpperCase();
+                const name = r.description || displaySym;
                 const exchangeFromProfile = r.__exchange;
-                const exchange = exchangeFromDisplay || exchangeFromProfile || 'US';
+                const exchange = exchangeFromProfile || (displaySym.includes('.') ? displaySym.split('.').pop() : 'US');
                 const type = r.type || 'Stock';
                 const item: StockWithWatchlistStatus = {
-                    symbol: upper,
+                    symbol: displaySym,
                     name,
-                    exchange,
+                    exchange: exchange || 'US',
                     type,
                     isInWatchlist: false,
                 };
                 return item;
-            })
-            .slice(0, 15);
+            });
 
         return mapped;
     } catch (err) {

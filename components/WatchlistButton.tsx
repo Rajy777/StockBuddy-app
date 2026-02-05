@@ -54,7 +54,7 @@ const WatchlistButton = ({
                 toast.success(next ? `${symbol} added to watchlist` : `${symbol} removed from watchlist`);
                 onWatchlistChange?.(symbol, next);
             }
-        } catch (e) {
+        } catch {
             setAdded(!next);
             toast.error("An error occurred");
         }

@@ -16,6 +16,7 @@ import { formatTradingViewSymbol } from "@/lib/utils";
 export default async function StockDetails({ params }: StockDetailsPageProps) {
     const { symbol } = await params;
     const tvSymbol = formatTradingViewSymbol(symbol);
+    console.log(`[DEBUG] Rendering stock page for: ${symbol}, TradingView symbol: ${tvSymbol}`);
     const scriptUrl = `https://s3.tradingview.com/external-embedding/embed-widget-`;
 
     let userEmail = "";

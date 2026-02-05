@@ -1,4 +1,5 @@
-const { Client } = require('pg');
+import pg from 'pg';
+const { Client } = pg;
 
 const conn = 'postgres://postgres.samtqyznrjviqieiaaol:Px/f*UCy6zB9qq4@db.samtqyznrjviqieiaaol.supabase.co:5432/postgres';
 
